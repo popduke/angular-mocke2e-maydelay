@@ -4,7 +4,7 @@
   "homepage": "https://github.com/popduke/angular-mocks-maydelay",
   "repository": {
     "type": "git",
-    "url": "git://github.com/popduke/angular-mocks-maydelay.git"
+    "url": "https://github.com/popduke/angular-mocks-maydelay.git"
   },
   "authors": [
     "Yonny Hao <popduke@gmail.com>"
