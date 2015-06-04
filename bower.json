@@ -2,10 +2,6 @@
   "name": "angular-mocke2e-maydelay",
   "version": "1.0.0",
   "homepage": "https://github.com/popduke/angular-mocks-maydelay",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/popduke/angular-mocks-maydelay.git"
-  },
   "authors": [
     "Yonny Hao <popduke@gmail.com>"
   ],
