@@ -58,7 +58,7 @@
                     };
 
                     for (var key in $delegate) {
-                        if (key === 'when') {
+                        if (key === 'when' || key === 'expect') {
                             proxy[key] = $delegate.when = function (method, url, data, headers) {
                                 var def = [method, url, data, headers, 0, undefined];
                                 var chain = delegateWhen.call($delegate, method, url, data, headers);
