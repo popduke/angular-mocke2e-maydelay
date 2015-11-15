@@ -59,7 +59,7 @@
 
                     for (var key in $delegate) {
                         if (key === 'when' || key === 'expect') {
-                            proxy[key] = $delegate.when = function (method, url, data, headers) {
+                            proxy[key] = $delegate[key] = function (method, url, data, headers) {
                                 var def = [method, url, data, headers, 0, undefined];
                                 var chain = delegate[key].call($delegate, method, url, data, headers);
                                 defs.push(def);
