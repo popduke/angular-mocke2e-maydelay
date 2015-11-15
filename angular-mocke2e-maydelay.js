@@ -9,7 +9,7 @@
     angular.module('mayDelay', ['ngMockE2E'])
         .config(function ($provide) {
             $provide.decorator('$httpBackend', function ($delegate, $timeout) {
-                    var delegateWhen = $delegate.when;
+                    var delegate = {"when": $delegate.when, "expect": $delegate.expect};
                     var pop = Array.prototype.pop;
                     var defs = [];
                     //same matching process as $httpBackend
@@ -61,7 +61,7 @@
                         if (key === 'when' || key === 'expect') {
                             proxy[key] = $delegate.when = function (method, url, data, headers) {
                                 var def = [method, url, data, headers, 0, undefined];
-                                var chain = delegateWhen.call($delegate, method, url, data, headers);
+                                var chain = delegate[key].call($delegate, method, url, data, headers);
                                 defs.push(def);
                                 var ret = {
                                     respond: function () {
