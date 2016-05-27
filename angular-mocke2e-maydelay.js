@@ -7,8 +7,8 @@
 (function (angular, window, undefined) {
     'use strict';
     angular.module('mayDelay', ['ngMockE2E'])
-        .config(function ($provide) {
-            $provide.decorator('$httpBackend', function ($delegate, $timeout) {
+        .config(["$provide", function ($provide) {
+            $provide.decorator('$httpBackend', ["$delegate", "$timeout", function ($delegate, $timeout) {
                     var delegate = {"when": $delegate.when, "expect": $delegate.expect};
                     var pop = Array.prototype.pop;
                     var defs = [];
@@ -94,7 +94,7 @@
                         }
                     }
                     return proxy;
-                }
+                }]
             );
-        });
+        }]);
 })(window.angular, window, undefined);
