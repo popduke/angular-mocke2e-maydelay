@@ -1,0 +1,16 @@
+{
+  "name": "angular-mocke2e-maydelay",
+  "version": "1.0.0",
+  "homepage": "https://github.com/popduke/angular-mocks-maydelay",
+  "author": {
+    "name": "Yonny Hao",
+    "email": "popduke@gmail.com"
+  },
+  "description": "Enhance $httpBackend in ngMockE2E to support mock delayed http response",
+  "main": "angular-mocke2e-maydelay.js",
+  "license": "MIT",
+  "repository" : { 
+		"type" : "git"
+		, "url" : "https://github.com/popduke/angular-mocke2e-maydelay.git"
+	}
+}
