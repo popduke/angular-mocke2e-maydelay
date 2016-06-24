@@ -7,9 +7,9 @@
 (function (angular, window, undefined) {
     'use strict';
     angular.module('mayDelay', ['ngMockE2E'])
-        .config(function ($provide) {
-            $provide.decorator('$httpBackend', function ($delegate, $timeout) {
-                    var delegateWhen = $delegate.when;
+        .config(["$provide", function ($provide) {
+            $provide.decorator('$httpBackend', ["$delegate", "$timeout", function ($delegate, $timeout) {
+                    var delegate = {"when": $delegate.when, "expect": $delegate.expect};
                     var pop = Array.prototype.pop;
                     var defs = [];
                     //same matching process as $httpBackend
@@ -40,10 +40,15 @@
                         }
                         return data == d;
                     }
-                    var proxy = function (method, url, data, callback, headers) {
+                    var proxy = function () {
+                        var method = arguments[0];
+                        var url = arguments[1];
+                        var data = arguments[2];
+                        var callback = arguments[3];
+                        var headers = arguments[4];
                         var d = match(method, url, data, headers);
                         if (!d || d.passThrough || !d.delay) {
-                            return $delegate.call(this, method, url, data, callback, headers);
+                            return $delegate.apply(this, arguments)
                         }
                         if (d.delay > 0) {
                             var interceptor = function () {
@@ -53,15 +58,18 @@
                                     callback.apply(self, args);
                                 }, d.delay);
                             };
-                            return $delegate.call(this, method, url, data, interceptor, headers);
+                            var args = Array.prototype.slice.call(arguments);
+                            args[3] = interceptor;
+                            return $delegate.apply(this, arguments);
                         }
                     };
 
                     for (var key in $delegate) {
-                        if (key === 'when') {
-                            proxy[key] = $delegate.when = function (method, url, data, headers) {
+                        if (key === 'when' || key === 'expect') {
+                            var k = key;
+                            proxy[key] = $delegate[k] = function (method, url, data, headers) {
                                 var def = [method, url, data, headers, 0, undefined];
-                                var chain = delegateWhen.call($delegate, method, url, data, headers);
+                                var chain = delegate[k].call($delegate, method, url, data, headers);
                                 defs.push(def);
                                 var ret = {
                                     respond: function () {
@@ -77,8 +85,10 @@
                                         }
                                         chain.respond.apply(chain, arguments);
                                         return ret;
-                                    },
-                                    passThrough: function () {
+                                    }
+                                }
+                                if (chain.passThrough) {
+                                    ret.passThrough = function () {
                                         def[4] = 0;
                                         def[5] = true;
                                         chain.passThrough.apply(chain);
@@ -93,7 +103,7 @@
                         }
                     }
                     return proxy;
-                }
+                }]
             );
-        });
+        }]);
 })(window.angular, window, undefined);
