@@ -66,37 +66,39 @@
 
                     for (var key in $delegate) {
                         if (key === 'when' || key === 'expect') {
-                            var k = key;
-                            proxy[key] = $delegate[k] = function (method, url, data, headers) {
-                                var def = [method, url, data, headers, 0, undefined];
-                                var chain = delegate[k].call($delegate, method, url, data, headers);
-                                defs.push(def);
-                                var ret = {
-                                    respond: function () {
-                                        if ((arguments.length > 2 || !angular.isNumber(arguments[0])) && angular.isNumber(arguments[arguments.length - 1])) {
-                                            var delayMS = pop.call(arguments);
-                                            if (delayMS > 0) {
-                                                def[4] = delayMS;
+                            proxy[key] = $delegate[key] = (function (key) {
+                                var k = key;
+                                return function (method, url, data, headers) {
+                                    var def = [method, url, data, headers, 0, undefined];
+                                    var chain = delegate[k].call($delegate, method, url, data, headers);
+                                    defs.push(def);
+                                    var ret = {
+                                        respond: function () {
+                                            if ((arguments.length > 2 || !angular.isNumber(arguments[0])) && angular.isNumber(arguments[arguments.length - 1])) {
+                                                var delayMS = pop.call(arguments);
+                                                if (delayMS > 0) {
+                                                    def[4] = delayMS;
+                                                    def[5] = undefined;
+                                                }
+                                            } else {
+                                                def[4] = 0;
                                                 def[5] = undefined;
                                             }
-                                        } else {
-                                            def[4] = 0;
-                                            def[5] = undefined;
+                                            chain.respond.apply(chain, arguments);
+                                            return ret;
                                         }
-                                        chain.respond.apply(chain, arguments);
-                                        return ret;
                                     }
-                                }
-                                if (chain.passThrough) {
-                                    ret.passThrough = function () {
-                                        def[4] = 0;
-                                        def[5] = true;
-                                        chain.passThrough.apply(chain);
-                                        return ret;
+                                    if (chain.passThrough) {
+                                        ret.passThrough = function () {
+                                            def[4] = 0;
+                                            def[5] = true;
+                                            chain.passThrough.apply(chain);
+                                            return ret;
+                                        }
                                     }
-                                }
-                                return ret;
-                            };
+                                    return ret;
+                                };
+                            })(key);
                         }
                         else {
                             proxy[key] = $delegate[key];
