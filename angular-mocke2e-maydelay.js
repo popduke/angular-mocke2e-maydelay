@@ -31,7 +31,7 @@
                         if (angular.isFunction(headers)) return headers(h);
                         return angular.equals(headers, h);
                     }
-                    var matchData = function (data, u) {
+                    var matchData = function (data, d) {
                         if (angular.isUndefined(data)) return true;
                         if (data && angular.isFunction(data.test)) return data.test(d);
                         if (data && angular.isFunction(data)) return data(d);
