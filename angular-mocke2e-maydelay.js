@@ -60,7 +60,7 @@
                             };
                             var args = Array.prototype.slice.call(arguments);
                             args[3] = interceptor;
-                            return $delegate.apply(this, arguments);
+                            return $delegate.apply(this, args);
                         }
                     };
 
